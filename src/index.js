@@ -8,6 +8,7 @@ import VideoList from './components/video_list';
 import VideoDetail from './components/video_detail';
 
 const API_KEY = 'AIzaSyCIOzPC16Vba7Elr7u4dtZUQLXGG6GX3Ew';
+const LaunchDarkly = require('ldclient-js');
 
 class App extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ class App extends Component {
 
         const videoSearch = _.debounce((term) => { this.videoSearch(term) }, 300);
         return (
-            <div className="container_inner"><h3>Hello React</h3>
+            <div className="container_inner">
     			<SearchBar onTermChange={videoSearch} />
     			<VideoDetail video={this.state.selectedVideo}/>
     			<VideoList 

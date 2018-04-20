@@ -1,25 +1,51 @@
 import React, { Component } from 'react';
+import LDClient from 'ldclient-js';
 
 class SearchBar extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { term: '' };
-    }
-    onInputChange(term) {
-        this.setState({ term });
-        this.props.onTermChange(term);
+  constructor(props) {
+    super(props);
+    this.state = {
+      term: ''
+    };
+  }
 
-    }
+  componentDidMount() {
+    console.log("componentDidMount");
+    const user = {
+      key: 'gurusewak.kalra@logmein.com'
+    };
+    this.ldclient = LDClient.initialize('5ad91e0442755c2e1c1093cb', user);
+    this.ldclient.on('ready', this.renderdarkly.bind(this));
+    this.ldclient.on('change', this.renderdarkly.bind(this));
+  }
+  renderdarkly() {
+    this.setState({ enableFeature: this.ldclient.variation('enable-auto-search') });
+    console.log('this.state', this.state)
+  }
+  onInputChange(term) {
+    this.setState({ term });
+    this.props.onTermChange(term);
 
-    render() {
-        return (
-            <div className="search-bar">
-            	<input 
-            	value = {this.state.term}
-            	onChange = {(event) => this.onInputChange(event.target.value)} />
-        	</div>
-        );
+  }
+  handleKeyPress(event) {
+    console.log(this.state.enableFeature, 'enableFeature');
+    if (event.key === 'Enter') {
+      this.onInputChange(event.target.value)
     }
+    if (this.state.enableFeature) {
+      this.onInputChange(event.target.value)
+    }
+  }
+
+  render() {
+    return (
+      <div className="search-bar">
+        <input 
+        onKeyPress={(event) => this.handleKeyPress(event)} 
+        />
+    </div>
+    );
+  }
 }
 
 export default SearchBar;
