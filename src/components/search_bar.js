@@ -10,7 +10,6 @@ class SearchBar extends Component {
   }
 
   componentDidMount() {
-    console.log("componentDidMount");
     const user = {
       key: 'gurusewak.kalra@logmein.com'
     };
@@ -20,7 +19,6 @@ class SearchBar extends Component {
   }
   renderdarkly() {
     this.setState({ enableFeature: this.ldclient.variation('enable-auto-search') });
-    console.log('this.state', this.state)
   }
   onInputChange(term) {
     this.setState({ term });
